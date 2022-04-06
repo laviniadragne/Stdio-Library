@@ -1,0 +1,102 @@
+Nume: Dragne Lavinia-Stefana
+Grupa: 334 CA
+
+				            SISTEME DE OPERARE
+				        Tema #2 - Biblioteca stdio
+
+
+	Continutul proiectului este urmatorul:
+	
+	- so_stdio.c, so_stdio.h
+	
+	- Makefile 
+
+	- acest fisier README.
+
+	* Organizare
+
+    * Functiile dezvoltate descriu o implementare minimala a unei biblioteci
+dinamice asemanatoare cu stdio, folosindu-se de o structura SO_FILE (similara
+cu FILE din C).
+
+    * Structura SO_FILE contine un buffer asociat, utilizat in operatiile de
+scriere si citire, un file descriptor / un handle (in functie de sistemul
+pe care a fost implementata). Se retine numarul de bytes nefolositi din buffer,
+numarul total de bytes din buffer, ultima operatie efectuata asupra fisierului,
+un cod de eroare (in cazul in care apar erori in operatii), un flag care indica
+daca s-a ajuns sau nu la finalul fisierului, un cursor la pozitia actuala din
+fisier si pid-ul procesului copil, respectiv o structura asociata procesului
+creat la apelul functiei popen.
+
+    * Functia so_fopen aloca o structura SO_FILE si in functie de modul in care
+va fi deschis fisierul se seteaza si flag-urile pentru apelul de open /
+CreateFile. Structura se initializeaza folosind functia init_file. De asemenea,
+se retine modul pentru care s-a deschis fisierul, dar si file descriptorul,
+respectiv HANDLE-ul asociat, in structura SO_FILE.
+
+    * Functia so_fclose apeleaza fflush, pentru a mentine coerenta datelor,
+scriind, daca exista, restul de date folosite in fisier, inchide fisierul si
+dezaloca memoria asociata structurii SO_FILE.
+
+    * Functia so_fflush scrie toate datele din buffer in fisier si invalideaza
+bufferul la final. Se tine cont daca fisierul a fost deschis in modul append.
+Scrierea se face intr-o bucla, contorizandu-se mereu numarul de bytes ce
+s-au reusit a fi scrisi la pasul curent.
+
+    * Functia so_fseek tine cont de ultima operatie efectuata asupra fisierului,
+mutand cursorul cu un offset dat.
+
+    * Functia so_fread calculeaza cati bytes trebuie cititi. Citeste prima data
+toate datele din buffer si daca nu sunt suficiente se incearca aducerea de
+blocuri de 4096 de bytes din fisier in buffer. La fiecare pas se contorizeaza
+cati bytes s-a reusit a fi adusi. Operatia se opreste daca s-a terminat
+fisierul sau daca s-au citit toate datele de care era nevoie.
+
+    * Functia so_fwrite scrie prima data datele in buffer si daca acesta nu
+este suficient de mare, scrie in blocuri de 4096, pentru a umple buffer-ul
+cu bytes, ce ulterior ii exporta in fisier.
+
+    * Functia so_popen creaza un pipe si un proces copil. Sunt inchise capetele
+de pipe nefolosite si se face redirectarea la STDIN/STDOUT (in functie de modul
+pentru care au fost deschise fisierele). Procesul copil executa comanda, iar
+parintele asteapta terminarea lui in functia so_pclose, pastrand o referinta la
+pidul acestuia, respectiv la procesul abia creat (pe Windows).
+
+    * Implementare
+    - A fost implementata intreaga functionalitate.
+
+    * Cum se compileaza
+
+    - Linux: make
+    - Windows: nmake
+
+    * Git
+
+    - Link repo: https://github.com/laviniadragne/Stdio-Library
+
+	* Bibliografie:
+    1. Makefile windows: 
+    https://github.com/systems-cs-pub-ro/so/blob/master/labs/lab01/sol/win/3-bounds/Makefile.dynamic
+    2. RedirectHandle / so_popen (windows): 
+    https://github.com/systems-cs-pub-ro/so/blob/master/labs/lab03/sol/win/2-tiny/tiny.c
+    3. So_popen (linux): 
+    https://github.com/systems-cs-pub-ro/so/blob/master/labs/lab03/sol/lin/6-pipe/pipe.c
+    4. Makefile linux:
+    https://github.com/systems-cs-pub-ro/so/blob/master/labs/lab01/sol/lin/2-lib/Makefile_dynamic
+    https://ocw.cs.pub.ro/courses/so/laboratoare/laborator-01 - implementare exercitii
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                                         
